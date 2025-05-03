@@ -11,22 +11,12 @@ nextLevelBtn.addEventListener('click', nextStage);
 // 게임 설정
 const blockTypes = ['💎', '🧨', '⛏️', '🟫', '🌳'];
 const goalTargets = [
-    { diamond: 8, tnt: 5 },     // 스테이지 1
-    { diamond: 12, tnt: 8 },    // 스테이지 2
-    { diamond: 15, tnt: 12 },   // 스테이지 3
-    { diamond: 20, tnt: 15 },   // 스테이지 4
-    { diamond: 25, tnt: 20 },   // 스테이지 5
-    { diamond: 30, tnt: 25 },   // 스테이지 6
-    { diamond: 35, tnt: 30 },   // 스테이지 7
-    { diamond: 40, tnt: 35 },   // 스테이지 8
-    { diamond: 45, tnt: 40 },   // 스테이지 9
-    { diamond: 50, tnt: 45 },   // 스테이지 10
-    { diamond: 60, tnt: 50 },   // 스테이지 11
-    { diamond: 70, tnt: 60 },   // 스테이지 12
-    { diamond: 80, tnt: 70 },   // 스테이지 13
-    { diamond: 90, tnt: 80 },   // 스테이지 14
-    { diamond: 100, tnt: 90 },  // 스테이지 15
-    { diamond: 120, tnt: 100 }  // 스테이지 16
+    { diamond: 5, tnt: 3, pickaxe: 4, wood: 3 },     // 스테이지 1
+    { diamond: 8, tnt: 5, pickaxe: 6, wood: 5 },     // 스테이지 2
+    { diamond: 12, tnt: 8, pickaxe: 10, wood: 8 },   // 스테이지 3
+    { diamond: 15, tnt: 10, pickaxe: 15, wood: 12 }, // 스테이지 4
+    { diamond: 20, tnt: 15, pickaxe: 20, wood: 15 }, // 스테이지 5
+    { diamond: 25, tnt: 20, pickaxe: 25, wood: 20 }  // 스테이지 6
 ];
 
 // 게임 상태
@@ -34,7 +24,7 @@ let boardState = [];
 let selected = null;
 let score = 0;
 let level = 0;
-let goalProgress = { diamond: 0, tnt: 0 };
+let goalProgress = { diamond: 0, tnt: 0, pickaxe: 0, wood: 0 };
 
 // 게임 보드 초기화
 function initBoard() {
@@ -139,14 +129,24 @@ function checkMatches() {
 function updateGoalProgress(block) {
     if (block === '💎') goalProgress.diamond++;
     if (block === '🧨') goalProgress.tnt++;
+    if (block === '⛏️') goalProgress.pickaxe++;
+    if (block === '🌳') goalProgress.wood++;
     updateGoals();
 }
 
 // 목표 표시 업데이트
 function updateGoals() {
     const goal = goalTargets[level];
-    goalsDisplay.textContent = `목표: 다이아몬드 ${goal.diamond}개 (${goalProgress.diamond}), TNT ${goal.tnt}개 (${goalProgress.tnt})`;
-    if (goalProgress.diamond >= goal.diamond && goalProgress.tnt >= goal.tnt) {
+    goalsDisplay.textContent = `목표: 
+        다이아몬드 ${goal.diamond}개 (${goalProgress.diamond}), 
+        TNT ${goal.tnt}개 (${goalProgress.tnt}),
+        곡괭이 ${goal.pickaxe}개 (${goalProgress.pickaxe}),
+        나무 ${goal.wood}개 (${goalProgress.wood})`;
+    
+    if (goalProgress.diamond >= goal.diamond && 
+        goalProgress.tnt >= goal.tnt && 
+        goalProgress.pickaxe >= goal.pickaxe && 
+        goalProgress.wood >= goal.wood) {
         nextLevelBtn.style.display = 'block';
     }
 }
@@ -160,7 +160,7 @@ function nextStage() {
         level = 0;
         score = 0;
     }
-    goalProgress = { diamond: 0, tnt: 0 };
+    goalProgress = { diamond: 0, tnt: 0, pickaxe: 0, wood: 0 };
     levelDisplay.textContent = '스테이지: ' + (level + 1);
     nextLevelBtn.style.display = 'none';
     initBoard();
